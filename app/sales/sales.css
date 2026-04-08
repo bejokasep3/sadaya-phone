@@ -1,0 +1,245 @@
+/* Sales Layout — Mobile-First / Frontier-Tech Modern */
+.sales-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.sales-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sales-topbar .topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sales-topbar .topbar-brand .brand-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent-blue-subtle);
+  border: 1px solid var(--border-active);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.sales-topbar .topbar-brand h2 {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.sales-topbar .topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sales-topbar .topbar-user {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-align: right;
+  line-height: 1.3;
+}
+
+.sales-topbar .topbar-user strong {
+  color: var(--text-primary);
+  display: block;
+  font-weight: 600;
+}
+
+.sales-main {
+  flex: 1;
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Bottom Nav */
+.sales-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0.5rem 0;
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+.sales-bottom-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  min-width: 60px;
+}
+
+.sales-bottom-nav a .nav-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.sales-bottom-nav a.active {
+  color: var(--accent-blue);
+  background: var(--accent-blue-subtle);
+}
+
+.sales-bottom-nav a:hover {
+  color: var(--accent-blue);
+}
+
+.sales-layout .sales-main {
+  padding-bottom: 5rem;
+}
+
+/* Saldo widget */
+.saldo-widget {
+  background: var(--bg-card);
+  border: 1px solid var(--border-active);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-blue-glow);
+}
+
+.saldo-widget .saldo-info .saldo-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.saldo-widget .saldo-info .saldo-amount {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--accent-blue);
+}
+
+.saldo-widget .saldo-icon {
+  font-size: 2rem;
+  opacity: 0.4;
+}
+
+/* Phone Catalog Cards */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.phone-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.phone-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent-blue);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.phone-card:hover::before { opacity: 1; }
+
+.phone-card:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-active);
+  box-shadow: var(--shadow-blue-glow);
+}
+
+.phone-card .phone-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.phone-card .phone-brand {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.phone-card .phone-name {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.phone-card .phone-imei {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.phone-card .phone-price {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--accent-blue);
+  margin-top: 0.5rem;
+}
+
+.phone-card .phone-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.phone-card .phone-holder {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+@media (min-width: 480px) {
+  .catalog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
