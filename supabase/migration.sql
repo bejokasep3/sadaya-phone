@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS public.inventory (
     CHECK (status IN ('available', 'requested', 'on_hand', 'sold', 'returned')),
   sales_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
   waktu_diambil TIMESTAMPTZ,
+  foto_url TEXT[] DEFAULT '{}',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -227,6 +228,7 @@ SELECT
   status,
   sales_id,
   waktu_diambil,
+  foto_url,
   created_at,
   updated_at
 FROM public.inventory;
@@ -235,16 +237,39 @@ COMMENT ON VIEW public.inventory_sales_view IS 'View inventori tanpa kolom harga
 
 
 -- ============================================================
--- 7. STORAGE BUCKET (jalankan terpisah di Supabase Dashboard
---    atau via supabase client jika perlu)
+-- 7. STORAGE BUCKET POLICIES (WAJIB DIJALANKAN)
 -- ============================================================
--- Buat bucket bernama 'bukti-transaksi' di Supabase Storage Dashboard.
--- Set ke PUBLIC atau private sesuai kebutuhan.
--- Policy: Authenticated users bisa upload, Admin bisa read semua.
+-- Jalankan query ini untuk mengizinkan insert/upload foto
+-- Pastikan bucket 'bukti-transaksi' dan 'inventory-photos' sudah dibuat di menu Storage.
 
--- INSERT INTO storage.buckets (id, name, public)
--- VALUES ('bukti-transaksi', 'bukti-transaksi', false);
+-- Izinkan authenticated users untuk upload file baru
+CREATE POLICY "Authenticated users can upload objects" 
+ON storage.objects FOR INSERT 
+TO authenticated 
+WITH CHECK (
+  bucket_id IN ('bukti-transaksi', 'inventory-photos')
+);
 
+-- Izinkan authenticated users untuk melihat/mendownload file
+CREATE POLICY "Authenticated users can read objects" 
+ON storage.objects FOR SELECT 
+TO authenticated 
+USING (
+  bucket_id IN ('bukti-transaksi', 'inventory-photos')
+);
+
+-- Admin bisa update / delete jika diperlukan
+CREATE POLICY "Admin can update/delete objects" 
+ON storage.objects FOR ALL 
+TO authenticated 
+USING (
+  bucket_id IN ('bukti-transaksi', 'inventory-photos') AND
+  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+)
+WITH CHECK (
+  bucket_id IN ('bukti-transaksi', 'inventory-photos') AND
+  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+);
 
 -- ============================================================
 -- DONE! Jalankan script ini di SQL Editor Supabase.

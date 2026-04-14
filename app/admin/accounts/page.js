@@ -237,7 +237,7 @@ export default function ManajemenAkun() {
             />
             {username && (
               <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-                Internal: <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent-blue)' }}>
+                Internal: <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent-green)' }}>
                   {username}{INTERNAL_DOMAIN}
                 </span>
               </div>
@@ -309,10 +309,10 @@ export default function ManajemenAkun() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <div style={{
                         width: 32, height: 32, borderRadius: '50%',
-                        background: user.role === 'admin' ? 'var(--accent-blue-dim)' : 'var(--accent-blue-subtle)',
+                        background: user.role === 'admin' ? 'var(--accent-green)' : 'var(--accent-green-subtle)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: 'var(--font-size-xs)', fontWeight: 700,
-                        color: user.role === 'admin' ? '#fff' : 'var(--accent-blue)',
+                        color: user.role === 'admin' ? 'var(--text-inverse)' : 'var(--accent-green)',
                         flexShrink: 0,
                       }}>
                         {(user.nama || '?').charAt(0).toUpperCase()}

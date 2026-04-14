@@ -97,7 +97,7 @@ export default function CashReconciliation() {
         </div>
       </div>
 
-      <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--accent-blue)', padding: '0.75rem', background: 'var(--accent-blue-subtle)', borderRadius: 'var(--radius-md)', marginBottom: '1rem', border: '1px solid var(--border-active)' }}>
+      <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--accent-green)', padding: '0.75rem', background: 'var(--accent-green-subtle)', borderRadius: 'var(--radius-md)', marginBottom: '1rem', border: '1px solid var(--border-active)' }}>
         Piutang hanya mencakup <strong>Harga Wajib Setor</strong>. Selisih dengan harga jual aktual adalah hak margin Sales yang telah diambil di lapangan.
       </div>
 

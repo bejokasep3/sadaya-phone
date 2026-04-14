@@ -274,7 +274,7 @@ export default function CheckoutPage() {
             <div
               className={`role-option ${tipePembayaran === 'transfer' ? 'selected' : ''}`}
               onClick={() => setTipePembayaran('transfer')}
-              style={{ cursor: 'pointer', flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', background: tipePembayaran === 'transfer' ? 'var(--accent-blue-subtle)' : 'var(--bg-surface)', border: `2px solid ${tipePembayaran === 'transfer' ? 'var(--accent-blue)' : 'var(--border-subtle)'}` }}
+              style={{ cursor: 'pointer', flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', background: tipePembayaran === 'transfer' ? 'var(--accent-green-subtle)' : 'var(--bg-surface)', border: `2px solid ${tipePembayaran === 'transfer' ? 'var(--accent-green)' : 'var(--border-subtle)'}` }}
             >
               <div style={{ fontSize: 'var(--font-size-sm)', marginBottom: '0.25rem', fontWeight: 600 }}>Transfer</div>
 
@@ -288,7 +288,7 @@ export default function CheckoutPage() {
             </div>
           )}
           {tipePembayaran === 'transfer' && (
-            <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--accent-blue)', marginTop: '0.5rem', padding: '0.5rem', background: 'var(--accent-blue-subtle)', borderRadius: 'var(--radius-sm)' }}>
+            <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--accent-green)', marginTop: '0.5rem', padding: '0.5rem', background: 'var(--accent-green-subtle)', borderRadius: 'var(--radius-sm)' }}>
               Transfer masuk ke rekening perusahaan. Keuntungan Anda akan dicairkan oleh Admin.
             </div>
           )}

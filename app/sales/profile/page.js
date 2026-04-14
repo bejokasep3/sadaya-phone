@@ -87,10 +87,10 @@ export default function ProfilePage() {
       <div className="glass-card" style={{ textAlign: 'center', marginBottom: '1rem', padding: '1.5rem' }}>
         <div style={{
           width: 64, height: 64, borderRadius: '50%', margin: '0 auto 0.75rem',
-          background: 'var(--accent-blue-dim)',
+          background: 'var(--accent-green)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.75rem', fontWeight: 800, color: '#fff',
-          boxShadow: 'var(--shadow-blue-glow)',
+          fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-inverse)',
+          boxShadow: '0 0 20px var(--accent-green-glow)',
         }}>
           {(profile?.nama || 'S').charAt(0).toUpperCase()}
         </div>

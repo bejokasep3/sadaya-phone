@@ -95,7 +95,7 @@ export default function PencairanHakSales() {
       <div className="stat-grid" style={{ gridTemplateColumns: '1fr 1fr', marginBottom: '1.5rem' }}>
         <div className="stat-card">
           <div className="stat-icon"></div>
-          <div className="stat-value" style={{ color: 'var(--accent-blue)', fontSize: 'var(--font-size-lg)' }}>
+          <div className="stat-value" style={{ color: 'var(--accent-green)', fontSize: 'var(--font-size-lg)' }}>
             {formatRp(totalHutang)}
           </div>
           <div className="stat-label">Total Hutang ke Sales</div>
@@ -107,7 +107,7 @@ export default function PencairanHakSales() {
         </div>
       </div>
 
-      <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--accent-blue)', padding: '0.75rem', background: 'var(--accent-blue-subtle)', borderRadius: 'var(--radius-md)', marginBottom: '1rem', border: '1px solid var(--border-active)' }}>
+      <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--accent-green)', padding: '0.75rem', background: 'var(--accent-green-subtle)', borderRadius: 'var(--radius-md)', marginBottom: '1rem', border: '1px solid var(--border-active)' }}>
         Saat pembeli membayar via <strong>Transfer</strong>, seluruh uang masuk ke rekening perusahaan. Bagian ini mencatat <strong>hak margin Sales</strong> (Harga Jual Aktual − Harga Wajib Setor) yang perlu ditransfer balik ke Sales.
       </div>
 
@@ -132,7 +132,7 @@ export default function PencairanHakSales() {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>Total Hak</div>
-                  <div style={{ fontWeight: 800, color: 'var(--accent-blue)' }}>{formatRp(salesTotal)}</div>
+                  <div style={{ fontWeight: 800, color: 'var(--accent-green)' }}>{formatRp(salesTotal)}</div>
                 </div>
               </div>
 

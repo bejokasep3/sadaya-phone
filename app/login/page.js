@@ -68,9 +68,9 @@ export default function LoginPage() {
 
       <div className="login-card">
         <div className="login-logo">
-          <div className="logo-icon"><Smartphone size={32} strokeWidth={1.5} color="var(--accent-blue-bright)" /></div>
-          <h1>PhoneTrack ERP</h1>
-          <p>Administrasi Konter — Sistem Internal</p>
+          <div className="logo-icon"><Smartphone size={32} strokeWidth={1.5} color="var(--accent-green)" /></div>
+          <h1>SADAYA PHONE</h1>
+          <p>Sistem Internal</p>
         </div>
 
         {/* Invite-only notice */}

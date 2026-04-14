@@ -155,7 +155,7 @@ export default function SalesCatalog() {
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '0.75rem 1rem',
-          background: 'var(--accent-blue-subtle)',
+          background: 'var(--accent-green-subtle)',
           borderColor: 'var(--border-active)',
         }}>
           <span style={{ fontSize: 'var(--font-size-sm)' }}>

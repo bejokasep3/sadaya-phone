@@ -87,7 +87,7 @@ export default function AdminLayout({ children }) {
         <div className="sidebar-brand">
           <div className="brand-icon"><Smartphone size={20} strokeWidth={1.5} /></div>
           <div>
-            <h2>PhoneTrack</h2>
+            <h2>SADAYA PHONE</h2>
             <small>Admin Panel</small>
           </div>
         </div>
