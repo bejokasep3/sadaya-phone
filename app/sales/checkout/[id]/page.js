@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { MapPin, AlertTriangle, CheckCircle } from 'lucide-react';
+import { formatRibuanInput, parseRibuan } from '@/lib/format';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -61,8 +62,8 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (!item) return;
 
-    const jual = parseInt(hargaJual);
-    if (isNaN(jual) || jual < item.harga_wajib_setor) {
+    const jual = parseRibuan(hargaJual);
+    if (jual < item.harga_wajib_setor) {
       alert(`Harga jual minimal harus sama dengan Harga Wajib Setor: ${formatRp(item.harga_wajib_setor)}`);
       return;
     }
@@ -157,7 +158,7 @@ export default function CheckoutPage() {
     );
   }
 
-  const hakSalesPreview = parseInt(hargaJual || 0) - item.harga_wajib_setor;
+  const hakSalesPreview = parseRibuan(hargaJual) - item.harga_wajib_setor;
 
   return (
     <>
@@ -187,13 +188,13 @@ export default function CheckoutPage() {
           <label htmlFor="hargaJual">Harga Jual Aktual (Deal di Lapangan) *</label>
           <input
             id="hargaJual"
-            type="number"
+            type="text"
+            inputMode="numeric"
             className="input-field"
-            placeholder="Contoh: 3500000"
+            placeholder="Contoh: 3.500.000"
             value={hargaJual}
-            onChange={e => setHargaJual(e.target.value)}
+            onChange={e => setHargaJual(formatRibuanInput(e.target.value))}
             required
-            min={item.harga_wajib_setor}
           />
           {hakSalesPreview > 0 && (
             <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-success)', marginTop: '0.25rem', fontWeight: 600 }}>

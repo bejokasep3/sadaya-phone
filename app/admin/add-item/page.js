@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { AlertTriangle, Camera, Upload, X, ImageIcon } from 'lucide-react';
+import { formatRibuanInput, parseRibuan } from '@/lib/format';
 
 export default function AddItemPage() {
   const [merk, setMerk] = useState('');
@@ -60,8 +61,8 @@ export default function AddItemPage() {
           merk: merk.trim(),
           tipe: tipe.trim(),
           imei: imei.trim(),
-          harga_modal_lelang: parseInt(hargaModal),
-          harga_wajib_setor: parseInt(hargaSetor),
+          harga_modal_lelang: parseRibuan(hargaModal),
+          harga_wajib_setor: parseRibuan(hargaSetor),
           status: 'available',
           foto_url: fotoUrls, // Array of strings
         });
@@ -123,7 +124,7 @@ export default function AddItemPage() {
     setPhotoPreviews(newPreviews);
   }
 
-  const margin = parseInt(hargaSetor || 0) - parseInt(hargaModal || 0);
+  const margin = parseRibuan(hargaSetor) - parseRibuan(hargaModal);
 
   function formatRp(val) {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val);
@@ -220,13 +221,13 @@ export default function AddItemPage() {
               <label htmlFor="hargaModal">Harga Modal Lelang</label>
               <input
                 id="hargaModal"
-                type="number"
+                type="text"
+                inputMode="numeric"
                 className="input-field"
                 placeholder="Rp"
                 value={hargaModal}
-                onChange={e => setHargaModal(e.target.value)}
+                onChange={e => setHargaModal(formatRibuanInput(e.target.value))}
                 required
-                min={0}
               />
             </div>
 
@@ -234,13 +235,13 @@ export default function AddItemPage() {
               <label htmlFor="hargaSetor">Harga Wajib Setor</label>
               <input
                 id="hargaSetor"
-                type="number"
+                type="text"
+                inputMode="numeric"
                 className="input-field"
                 placeholder="Rp"
                 value={hargaSetor}
-                onChange={e => setHargaSetor(e.target.value)}
+                onChange={e => setHargaSetor(formatRibuanInput(e.target.value))}
                 required
-                min={0}
               />
             </div>
           </div>

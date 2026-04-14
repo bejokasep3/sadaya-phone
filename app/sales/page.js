@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { Hand, ShoppingCart, Download } from 'lucide-react';
+import { Hand, ShoppingCart, Download, Trophy, Medal } from 'lucide-react';
 
 export default function SalesCatalog() {
   const [items, setItems] = useState([]);
@@ -176,14 +176,46 @@ export default function SalesCatalog() {
         <div className="saldo-icon"></div>
       </div>
 
-      {/* Leaderboard */}
+      {/* Leaderboard Podiums & List */}
       {leaderboard.length > 0 && (
         <div className="glass-card" style={{ marginBottom: '1rem' }}>
           <div className="section-title">Leaderboard Bulan Ini</div>
-          {leaderboard.map((entry, idx) => (
-            <div key={entry.id} className="leaderboard-item">
-              <div className={`leaderboard-rank ${idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : 'rank-other'}`}>
-                {idx + 1}
+          
+          {/* Top 3 Podium (2 - 1 - 3 order) */}
+          <div className="podium-container">
+            {/* Rank 2 */}
+            {leaderboard[1] && (
+              <div className="podium-step step-rank-2">
+                <div className="podium-avatar"><Medal size={20} strokeWidth={1.5} /></div>
+                <div className="podium-name">{leaderboard[1].nama}</div>
+                <div className="podium-score">{leaderboard[1].count} unit</div>
+              </div>
+            )}
+            
+            {/* Rank 1 */}
+            {leaderboard[0] && (
+              <div className="podium-step step-rank-1" style={{ zIndex: 10 }}>
+                <div className="podium-avatar"><Trophy size={24} strokeWidth={1.5} /></div>
+                <div className="podium-name">{leaderboard[0].nama}</div>
+                <div className="podium-score">{leaderboard[0].count} unit</div>
+              </div>
+            )}
+            
+            {/* Rank 3 */}
+            {leaderboard[2] && (
+              <div className="podium-step step-rank-3">
+                <div className="podium-avatar"><Medal size={18} strokeWidth={1.5} /></div>
+                <div className="podium-name">{leaderboard[2].nama}</div>
+                <div className="podium-score">{leaderboard[2].count} unit</div>
+              </div>
+            )}
+          </div>
+
+          {/* Ranks 4 and below */}
+          {leaderboard.slice(3).map((entry, idx) => (
+            <div key={entry.id} className="leaderboard-item" style={{ marginTop: '0.5rem' }}>
+              <div className="leaderboard-rank rank-other">
+                {idx + 4}
               </div>
               <div className="leaderboard-name">{entry.nama}</div>
               <div className="leaderboard-count">{entry.count} unit</div>

@@ -349,6 +349,91 @@ img { max-width: 100%; display: block; }
   border-radius: 10px;
 }
 
+/* ============================================================
+   LEADERBOARD PODIUM UI                                        
+   ============================================================ */
+.podium-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0 1rem;
+  height: 180px; 
+}
+
+.podium-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 32%;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  padding: 0.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.podium-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: -15px; /* overlap with podium */
+  z-index: 2;
+  border: 2px solid;
+}
+
+.podium-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 20px; /* space after avatar */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.podium-score {
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  margin-top: 0.25rem;
+}
+
+/* Rank 1 - Center, Highest, Gold-ish */
+.step-rank-1 {
+  height: 140px;
+  background: linear-gradient(to top, rgba(234, 179, 8, 0.15), rgba(234, 179, 8, 0.02));
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  border-bottom: none;
+}
+.step-rank-1 .podium-avatar { border-color: #EAB308; color: #EAB308; }
+.step-rank-1 .podium-score { color: #EAB308; }
+
+/* Rank 2 - Left, Medium, Silver-ish */
+.step-rank-2 {
+  height: 110px;
+  background: linear-gradient(to top, rgba(161, 161, 170, 0.15), rgba(161, 161, 170, 0.02));
+  border: 1px solid rgba(161, 161, 170, 0.3);
+  border-bottom: none;
+}
+.step-rank-2 .podium-avatar { border-color: #A1A1AA; color: #A1A1AA; }
+.step-rank-2 .podium-score { color: #A1A1AA; }
+
+/* Rank 3 - Right, Lowest, Bronze-ish */
+.step-rank-3 {
+  height: 90px;
+  background: linear-gradient(to top, rgba(217, 119, 6, 0.15), rgba(217, 119, 6, 0.02));
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  border-bottom: none;
+}
+.step-rank-3 .podium-avatar { border-color: #D97706; color: #D97706; }
+.step-rank-3 .podium-score { color: #D97706; }
+
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .hero-title { font-size: 3rem; }

@@ -14,6 +14,7 @@ import {
   Users,
   Menu,
   LogOut,
+  History,
 } from 'lucide-react';
 import './admin.css';
 
@@ -69,6 +70,7 @@ export default function AdminLayout({ children }) {
     { href: '/admin/inventory', icon: <Smartphone {...ICON_PROPS} />, label: 'Tracking Inventori' },
     { href: '/admin/cash', icon: <Wallet {...ICON_PROPS} />, label: 'Rekonsiliasi Kas' },
     { href: '/admin/pencairan', icon: <Landmark {...ICON_PROPS} />, label: 'Pencairan Hak Sales' },
+    { href: '/admin/history', icon: <History {...ICON_PROPS} />, label: 'Histori Penjualan' },
     { section: 'Manajemen' },
     { href: '/admin/add-item', icon: <PlusCircle {...ICON_PROPS} />, label: 'Tambah Barang' },
     { href: '/admin/accounts', icon: <Users {...ICON_PROPS} />, label: 'Manajemen Akun' },
