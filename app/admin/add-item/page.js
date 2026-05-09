@@ -14,7 +14,7 @@ export default function AddItemPage() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
-  
+
   // Photo states — now arrays for multi-upload (max 5)
   const [photos, setPhotos] = useState([]);
   const [photoPreviews, setPhotoPreviews] = useState([]);
@@ -29,7 +29,7 @@ export default function AddItemPage() {
     setSuccess('');
     setSubmitting(true);
     let fotoUrls = [];
-    
+
     try {
       // 1. Upload all photos if they exist
       if (photos.length > 0) {
@@ -47,7 +47,7 @@ export default function AddItemPage() {
           const { data: { publicUrl } } = supabase.storage
             .from('inventory-photos')
             .getPublicUrl(filePath);
-          
+
           return publicUrl;
         });
 
@@ -218,7 +218,7 @@ export default function AddItemPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className="input-group">
-              <label htmlFor="hargaModal">Harga Modal Lelang</label>
+              <label htmlFor="hargaModal">Harga Modal</label>
               <input
                 id="hargaModal"
                 type="text"
@@ -251,8 +251,8 @@ export default function AddItemPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
               <label style={{ marginBottom: 0 }}>Foto Produk ({photos.length}/5)</label>
               {photos.length < 5 && (
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => fileInputRef.current?.click()}
                   style={{ fontSize: '11px', color: 'var(--accent-green)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
                 >
@@ -260,28 +260,28 @@ export default function AddItemPage() {
                 </button>
               )}
             </div>
-            
-            <input 
-              type="file" 
+
+            <input
+              type="file"
               ref={fileInputRef}
               onChange={handlePhotoChange}
               accept="image/*"
               multiple
               style={{ display: 'none' }}
             />
-            
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', 
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
               gap: '1rem',
               marginTop: '0.5rem'
             }}>
               {photoPreviews.map((preview, idx) => (
                 <div key={idx} style={{ position: 'relative', width: '100%', aspectRatio: '4/5', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border-default)' }}>
-                  <img 
-                    src={preview} 
-                    alt={`Preview ${idx + 1}`} 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  <img
+                    src={preview}
+                    alt={`Preview ${idx + 1}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                   <button
                     type="button"
@@ -303,7 +303,7 @@ export default function AddItemPage() {
               ))}
 
               {photos.length < 5 && (
-                <div 
+                <div
                   onClick={() => fileInputRef.current?.click()}
                   style={{
                     width: '100%',
@@ -326,7 +326,7 @@ export default function AddItemPage() {
                 </div>
               )}
             </div>
-            
+
             {photos.length === 0 && (
               <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '0.5rem', fontStyle: 'italic' }}>
                 Atribut visual penting untuk membantu Sales mengenali unit barang.

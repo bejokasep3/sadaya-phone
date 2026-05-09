@@ -58,6 +58,15 @@ CREATE TABLE IF NOT EXISTS public.inventory (
 );
 
 COMMENT ON TABLE public.inventory IS 'Master data HP (smartphone). Status: available → requested → on_hand → sold/returned.';
+
+-- Pastikan kolom foto_url ada (untuk upgrade dari versi lama)
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name='inventory' AND column_name='foto_url') THEN
+        ALTER TABLE public.inventory ADD COLUMN foto_url TEXT[] DEFAULT '{}';
+    END IF;
+END $$;
+
 COMMENT ON COLUMN public.inventory.harga_modal_lelang IS 'Harga beli dari lelang — RAHASIA, hanya visible untuk Admin.';
 COMMENT ON COLUMN public.inventory.harga_wajib_setor IS 'Harga minimum yang wajib disetor oleh Sales ke perusahaan.';
 
@@ -96,6 +105,15 @@ CREATE TABLE IF NOT EXISTS public.transactions (
 );
 
 COMMENT ON TABLE public.transactions IS 'Catatan transaksi penjualan HP oleh Sales.';
+
+-- Pastikan kolom foto_bukti_url ada (untuk upgrade dari versi lama)
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name='transactions' AND column_name='foto_bukti_url') THEN
+        ALTER TABLE public.transactions ADD COLUMN foto_bukti_url TEXT DEFAULT '';
+    END IF;
+END $$;
+
 COMMENT ON COLUMN public.transactions.hak_sales IS 'Otomatis dihitung: harga_jual_aktual - harga_wajib_setor.';
 COMMENT ON COLUMN public.transactions.profit_perusahaan IS 'Otomatis dihitung: harga_wajib_setor - harga_modal_lelang.';
 COMMENT ON COLUMN public.transactions.status_setor_kas IS 'Khusus COD Cash: apakah Sales sudah menyetor uang fisik ke Admin.';
@@ -135,12 +153,14 @@ CREATE TRIGGER set_updated_at_transactions
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- Semua user auth bisa melihat profil (untuk leaderboard, dsb.)
+DROP POLICY IF EXISTS "Profiles: read for authenticated" ON public.profiles;
 CREATE POLICY "Profiles: read for authenticated"
   ON public.profiles FOR SELECT
   TO authenticated
   USING (true);
 
 -- User hanya bisa update profilnya sendiri
+DROP POLICY IF EXISTS "Profiles: update own" ON public.profiles;
 CREATE POLICY "Profiles: update own"
   ON public.profiles FOR UPDATE
   TO authenticated
@@ -151,6 +171,7 @@ CREATE POLICY "Profiles: update own"
 ALTER TABLE public.inventory ENABLE ROW LEVEL SECURITY;
 
 -- Admin: FULL ACCESS ke semua kolom (termasuk harga_modal_lelang)
+DROP POLICY IF EXISTS "Inventory: admin full access" ON public.inventory;
 CREATE POLICY "Inventory: admin full access"
   ON public.inventory FOR ALL
   TO authenticated
@@ -162,6 +183,7 @@ CREATE POLICY "Inventory: admin full access"
   );
 
 -- Sales: Hanya bisa SELECT (baca). CATATAN: kolom harga_modal_lelang akan di-mask di level API/View.
+DROP POLICY IF EXISTS "Inventory: sales read" ON public.inventory;
 CREATE POLICY "Inventory: sales read"
   ON public.inventory FOR SELECT
   TO authenticated
@@ -170,6 +192,7 @@ CREATE POLICY "Inventory: sales read"
   );
 
 -- Sales: Bisa UPDATE hanya inventori yang terkait dirinya (status changes)
+DROP POLICY IF EXISTS "Inventory: sales update own" ON public.inventory;
 CREATE POLICY "Inventory: sales update own"
   ON public.inventory FOR UPDATE
   TO authenticated
@@ -185,6 +208,7 @@ CREATE POLICY "Inventory: sales update own"
 ALTER TABLE public.transactions ENABLE ROW LEVEL SECURITY;
 
 -- Admin: FULL ACCESS
+DROP POLICY IF EXISTS "Transactions: admin full access" ON public.transactions;
 CREATE POLICY "Transactions: admin full access"
   ON public.transactions FOR ALL
   TO authenticated
@@ -196,6 +220,7 @@ CREATE POLICY "Transactions: admin full access"
   );
 
 -- Sales: Bisa INSERT transaksi baru (miliknya sendiri)
+DROP POLICY IF EXISTS "Transactions: sales insert own" ON public.transactions;
 CREATE POLICY "Transactions: sales insert own"
   ON public.transactions FOR INSERT
   TO authenticated
@@ -205,6 +230,7 @@ CREATE POLICY "Transactions: sales insert own"
   );
 
 -- Sales: Bisa SELECT transaksi miliknya sendiri
+DROP POLICY IF EXISTS "Transactions: sales read own" ON public.transactions;
 CREATE POLICY "Transactions: sales read own"
   ON public.transactions FOR SELECT
   TO authenticated
@@ -218,6 +244,7 @@ CREATE POLICY "Transactions: sales read own"
 -- 6. VIEW: inventory_sales_view (Tanpa harga_modal_lelang)
 -- ============================================================
 -- View ini WAJIB digunakan oleh API sisi Sales agar harga modal tidak bocor.
+DROP VIEW IF EXISTS public.inventory_sales_view;
 CREATE OR REPLACE VIEW public.inventory_sales_view AS
 SELECT
   id,
@@ -243,6 +270,7 @@ COMMENT ON VIEW public.inventory_sales_view IS 'View inventori tanpa kolom harga
 -- Pastikan bucket 'bukti-transaksi' dan 'inventory-photos' sudah dibuat di menu Storage.
 
 -- Izinkan authenticated users untuk upload file baru
+DROP POLICY IF EXISTS "Authenticated users can upload objects" ON storage.objects;
 CREATE POLICY "Authenticated users can upload objects" 
 ON storage.objects FOR INSERT 
 TO authenticated 
@@ -251,6 +279,7 @@ WITH CHECK (
 );
 
 -- Izinkan authenticated users untuk melihat/mendownload file
+DROP POLICY IF EXISTS "Authenticated users can read objects" ON storage.objects;
 CREATE POLICY "Authenticated users can read objects" 
 ON storage.objects FOR SELECT 
 TO authenticated 
@@ -259,6 +288,7 @@ USING (
 );
 
 -- Admin bisa update / delete jika diperlukan
+DROP POLICY IF EXISTS "Admin can update/delete objects" ON storage.objects;
 CREATE POLICY "Admin can update/delete objects" 
 ON storage.objects FOR ALL 
 TO authenticated 
@@ -270,6 +300,43 @@ WITH CHECK (
   bucket_id IN ('bukti-transaksi', 'inventory-photos') AND
   EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
 );
+
+-- ============================================================
+-- 8. TABEL: capital_funds (Tracking Modal)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS public.capital_funds (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tipe TEXT NOT NULL CHECK (tipe IN ('setoran', 'penarikan')),
+  jumlah BIGINT NOT NULL CHECK (jumlah > 0),
+  keterangan TEXT DEFAULT '',
+  tanggal DATE NOT NULL DEFAULT CURRENT_DATE,
+  created_by UUID REFERENCES public.profiles(id),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+COMMENT ON TABLE public.capital_funds IS 'Catatan transaksi modal (setoran/penarikan).';
+
+-- Trigger: Auto-update updated_at
+DROP TRIGGER IF EXISTS set_updated_at_capital_funds ON public.capital_funds;
+CREATE TRIGGER set_updated_at_capital_funds
+  BEFORE UPDATE ON public.capital_funds
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
+
+-- RLS: capital_funds
+ALTER TABLE public.capital_funds ENABLE ROW LEVEL SECURITY;
+
+-- Admin: FULL ACCESS
+DROP POLICY IF EXISTS "Capital Funds: admin full access" ON public.capital_funds;
+CREATE POLICY "Capital Funds: admin full access"
+  ON public.capital_funds FOR ALL
+  TO authenticated
+  USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+  )
+  WITH CHECK (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+  );
 
 -- ============================================================
 -- DONE! Jalankan script ini di SQL Editor Supabase.
